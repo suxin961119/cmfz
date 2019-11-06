@@ -2,6 +2,8 @@ package com.baizhi.service;
 
 import com.baizhi.dao.ArticleDao;
 import com.baizhi.entity.Article;
+import com.baizhi.redis.ClearRediscache;
+import com.baizhi.redis.RedisCache;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,6 +20,7 @@ public class ArticleServiceImpl implements ArticleService {
 
     //展示所有
     @Override
+    @RedisCache
     public Map<String, Object> selectAll(Integer page, Integer rows) {
         Article article = new Article();
         RowBounds rowBounds = new RowBounds((page - 1) * rows, rows);
@@ -34,6 +37,7 @@ public class ArticleServiceImpl implements ArticleService {
 
     //添加
     @Override
+    @ClearRediscache
     public String add(Article article) {
 
         article.setId(UUID.randomUUID().toString());
@@ -47,6 +51,7 @@ public class ArticleServiceImpl implements ArticleService {
 
     //修改
     @Override
+    @ClearRediscache
     public void edit(Article article) {
 
         try {
@@ -61,6 +66,7 @@ public class ArticleServiceImpl implements ArticleService {
 
     //删除
     @Override
+    @ClearRediscache
     public void del(String id) {
 
         Article article = articleDao.selectByPrimaryKey(id);

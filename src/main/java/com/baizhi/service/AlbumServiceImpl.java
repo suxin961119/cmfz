@@ -5,6 +5,8 @@ import com.baizhi.dao.AlbumDao;
 import com.baizhi.dao.StarDao;
 import com.baizhi.entity.Album;
 import com.baizhi.entity.Star;
+import com.baizhi.redis.ClearRediscache;
+import com.baizhi.redis.RedisCache;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,6 +27,7 @@ public class AlbumServiceImpl implements AlbumService {
     private StarDao starDao;
 
     @Override
+    @RedisCache
     public Map<String, Object> selectAll(Integer page, Integer rows) {
         Album album = new Album();
         RowBounds rowBounds = new RowBounds((page - 1) * rows, rows);
@@ -48,6 +51,7 @@ public class AlbumServiceImpl implements AlbumService {
 
     //添加
     @Override
+    @ClearRediscache
     public String add(Album album) {
         album.setId(UUID.randomUUID().toString());
         album.setCount(0);
@@ -60,6 +64,7 @@ public class AlbumServiceImpl implements AlbumService {
 
     //修改
     @Override
+    @ClearRediscache
     public void update(Album album) {
         if ("".equals(album.getCover())) {
             album.setCover(null);
@@ -73,6 +78,7 @@ public class AlbumServiceImpl implements AlbumService {
     }
 
     @Override
+    @RedisCache
     public Album selectOne(String id) {
         Album album = albumDao.selectByPrimaryKey(id);
         return album;

@@ -2,6 +2,8 @@ package com.baizhi.service;
 
 import com.baizhi.dao.CarouselDao;
 import com.baizhi.entity.Carousel;
+import com.baizhi.redis.ClearRediscache;
+import com.baizhi.redis.RedisCache;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,6 +22,7 @@ public class CarouselServiceImpl implements CarouselService {
 
     //展示所有加分页
     @Override
+    @RedisCache
     public Map<String, Object> selectAll(Integer page, Integer rows) {
         Carousel carousel = new Carousel();
         RowBounds rowBounds = new RowBounds((page - 1) * rows, rows);
@@ -36,6 +39,7 @@ public class CarouselServiceImpl implements CarouselService {
 
     //添加
     @Override
+    @ClearRediscache
     public String add(Carousel carousel) {
         carousel.setId(UUID.randomUUID().toString());
         carousel.setDate(new Date());
@@ -48,6 +52,7 @@ public class CarouselServiceImpl implements CarouselService {
 
     //修改
     @Override
+    @ClearRediscache
     public void update(Carousel carousel) {
         if ("".equals(carousel.getCover())) {
             carousel.setCover(null);
@@ -62,6 +67,7 @@ public class CarouselServiceImpl implements CarouselService {
 
     //删除
     @Override
+    @ClearRediscache
     public void delete(String id, HttpServletRequest request) {
         Carousel carousel = carouselDao.selectByPrimaryKey(id);
         int n = carouselDao.deleteByPrimaryKey(id);
