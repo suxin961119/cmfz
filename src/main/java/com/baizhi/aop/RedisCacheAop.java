@@ -22,7 +22,7 @@ public class RedisCacheAop {
     @Autowired
     private Jedis jedis;
 
-    //环绕
+    //查询
     @Around("execution(* com.baizhi.service.*.selectAll (..))")
     public Object around(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
         //获取目标方法所在的类的对象
@@ -69,7 +69,7 @@ public class RedisCacheAop {
         }
     }
 
-    //后置通知
+    //增删改
     @After("execution(* com.baizhi.service.*.*(..)) && !execution(* com.baizhi.service.*.selectAll(..))")
     public void after(JoinPoint joinPoint) {
         //获取目标方法
